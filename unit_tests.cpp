@@ -1,9 +1,85 @@
 #include <iostream>
 #include "gemm_ref.cpp"
+#include "gemm_compiler_32_32_32_32_32_32.cpp"
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
 #define DTYPE float
+
+TEST_CASE("Compiler optimization mnk: FMA operations of matrices"){
+
+  int64_t i_m = 32;
+  int64_t i_n = 32;
+  int64_t i_k = 32;
+  DTYPE* a = new DTYPE[i_m*i_k];
+  DTYPE* b = new DTYPE[i_k*i_n];
+  DTYPE* c = new DTYPE[i_m*i_n];
+  DTYPE* c_ref = new DTYPE[i_m*i_n];
+
+  for (int i = 0; i < i_k*i_m; i++)
+  {
+      a[i] = i;
+  }
+
+  for (int i = 0; i < i_k*i_n; i++)
+  {
+      b[i] = i_k*i_n-i;
+  }
+
+  for (int i = 0; i < i_m*i_n; i++)
+  {
+      c[i] = 1;
+      c_ref[i] = 1;
+  }
+
+  gemm_compiler_32_32_32_32_32_32_mnk(a,b,c);
+  gemm_ref(a,b,c_ref,i_m,i_n,i_k);
+  for (int i = 0; i < i_m*i_n; ++i) {
+      REQUIRE(c[i] == c_ref[i]);
+  }
+
+  delete[] a;
+  delete[] b;
+  delete[] c;
+}
+
+TEST_CASE("Compiler optimization nkm: FMA operations of matrices"){
+
+  int64_t i_m = 32;
+  int64_t i_n = 32;
+  int64_t i_k = 32;
+  DTYPE* a = new DTYPE[i_m*i_k];
+  DTYPE* b = new DTYPE[i_k*i_n];
+  DTYPE* c = new DTYPE[i_m*i_n];
+  DTYPE* c_ref = new DTYPE[i_m*i_n];
+
+  for (int i = 0; i < i_k*i_m; i++)
+  {
+      a[i] = i;
+  }
+
+  for (int i = 0; i < i_k*i_n; i++)
+  {
+      b[i] = i_k*i_n-i;
+  }
+
+  for (int i = 0; i < i_m*i_n; i++)
+  {
+      c[i] = 1;
+      c_ref[i] = 1;
+  }
+
+  gemm_compiler_32_32_32_32_32_32_nkm(a,b,c);
+  gemm_ref(a,b,c_ref,i_m,i_n,i_k);
+  for (int i = 0; i < i_m*i_n; ++i) {
+      REQUIRE(c[i] == c_ref[i]);
+  }
+
+  delete[] a;
+  delete[] b;
+  delete[] c;
+}
 
 TEST_CASE("FMA operations of matrices a, b, c (3x3)"){
 
