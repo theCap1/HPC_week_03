@@ -6,7 +6,7 @@
 For this exercise the variables of the leading dimensions were not implemented since they can be derived from the dimensions of the matrices together with the knowledge that for us the storage major is column major.
 
 #### 4.2 Matrix Kernels: Measuring Performance
-FMA operations of the form c = c + a $\cdot$ b can be splitted into two floating point operations, the multiplication and addition. Given the matrix dimensions M, N, K for every element in the result matrix c we need to do K$^2$ scalar multiplications for the matrix-matrix multiplication of A and B and one addition to add the result to the corresponding element in C. C has M$\cdot$N elements which leads to M$\cdot$N$\cdot$(K$^2$+1) floating point operations per matrix FMA operation.
+FMA operations of the form c = c + a $\cdot$ b can be splitted into two floating point operations, the multiplication and addition. Given the matrix dimensions M, N, K for every element in the result matrix c we need to do K$^2$ scalar multiplications for the matrix-matrix multiplication of A and B and one addition to add the result to the corresponding element in C. C has M$\cdot$N elements which leads to $\text{M} \cdot \text{N} \cdot (\text{K}^2 +1)$ floating point operations per matrix FMA operation.
 
 The benchmarks for different matrix sizes in the form of 
 
@@ -160,6 +160,7 @@ $\lambda$  | O0 | O2 | O3
 32	| 8,68457	| 64,8611	| 64,5811
 48	| 13,15290	| 75,6536	| 77,4684
 64	| 	| 106,12	| 105,35
+
 *Table 1: Performance in FP32 GFLOPs for different matrix dimensions $\lambda$ and compiler optimizations Oi.*
 
 ![alt text](matrix_fma_ref_benchmark.png "bruder")
